@@ -1,0 +1,305 @@
+.roboto-class {
+  font-family: "Roboto", serif;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 90vh;
+    background-color: #101214;
+    font-family: Roboto;
+}
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 300px;
+    height: 100%;
+    background-color: #000000;
+    z-index: 2; /* Ensure sidebar is on top of other content */
+}
+
+#sidebar-buttons {
+    margin-top: 30%;
+}
+
+#sidebar-separator {
+    border-bottom: 1px solid #333;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.sidebar-button {
+    display: flex;
+    align-items: center; /* This ensures vertical center alignment of the items in the button */
+    padding: 10px 15px;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    margin: 10px 30px;
+    transition: background-color 0.3s;
+}
+
+a.sidebar-button {
+    text-decoration: none; /* Remove underline from links */
+    color: #FFFFFF; /* Inherit the text color from the parent element */
+    display: flex; /* Ensure the link behaves like the original .sidebar-button */
+    align-items: center; /* Center content vertically */
+}
+
+.sidebar-button img {
+    width: 24px; /* Adjust as needed */
+    margin-right: 10px; /* Space between the icon and the text */
+    vertical-align: middle; /* This can help fine-tune the alignment if needed */
+}
+
+.sidebar-button:hover {
+    background-color: #333333; /* Change background on hover */
+}
+
+.sidebar-button span {
+    display: block; /* Makes the span take the full height of its line */
+    line-height: normal; /* Adjust line height to match your design needs */
+}
+
+#logo {
+    display: flex;   /* Enables Flexbox */
+    justify-content: center; /* Centers content horizontally */
+    align-items: center; /* Centers content vertically if needed */
+}
+
+.sidebar #logo img {
+    max-width: 60%;
+    margin-top: 10px;
+}
+
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background-color: #0F1113;
+    border-bottom: 1px solid #333; /* Thin outline on the bottom */
+    z-index: 1;
+    display: flex;
+    justify-content: flex-end; /* Aligns content to the right */
+    align-items: center; /* Centers content vertically */
+    padding-right: 20px; /* Padding on the right for spacing */
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 20px;
+    top: 50px;
+    background-color: #fff;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1000;
+    width: 150px;
+    border-radius: 4px;
+    padding: 5px 0;
+}
+
+.dropdown-menu a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f1f1f1;
+}
+
+.user-icon-container {
+    display: flex;
+    align-items: center;
+}
+
+.user-icon-container img {
+    width: 24px; /* Adjust size as needed */
+    margin-right: 10px; /* Space between icons if needed */
+}
+
+/* Optionally adjust the last image if no space is required between it and the edge */
+.user-icon-container img:last-child {
+    margin-right: 0;
+}
+
+.content {
+    margin-left: 310px; /* Offset content to the right of the sidebar */
+    margin-top: 50px; /* Offset content below the navbar */
+    padding: 20px;
+}
+
+.content {
+    text-align: center; /* Center content horizontally */
+    padding: 20px;
+}
+
+.search-container {
+    margin-top: 10%; /* Decent sized margin above the search box */
+}
+
+.search-box {
+    position: relative; /* For positioning the search icon inside the input */
+    background-color: #2B4162; /* Background color for the search box */
+    margin: 0 auto; /* Center the search box */
+    width: 40%; /* Adjust width as needed */
+    border-radius: 20px; /* Optional: rounded corners */
+}
+
+.search-box img {
+    position: absolute;
+    left: 12.5px;
+    top: 50%;
+    transform: translateY(-50%); /* Center vertically */
+    width: 35px; /* Icon size */
+}
+
+.search-box input {
+    width: 100%;
+    padding: 18px 20px 18px 55px; /* Padding to make space for the icon */
+    border: none; /* No border */
+    background: none; /* Transparent background */
+    color: #CCCBCB; /* Placeholder text color */
+    font-size: 24px; /* Text size */
+}
+
+.search-box input::placeholder {
+    color: #CCCBCB; /* Placeholder text color */
+}
+
+button {
+    background-color: #101214; /* Button fill */
+    color: white; /* Button text color */
+    border: 2px solid #FA9F42; /* Button outline */
+    padding: 10px 20px;
+    margin-top: 40px; /* Space above the button */
+    cursor: pointer; /* Cursor as pointer */
+    font-size: 16px; /* Text size */
+    border-radius: 5px; /* Optional: rounded corners */
+    display: block; /* Ensure it is block to center it */
+    margin-left: auto;
+    margin-right: auto; /* Center the button */
+}
+
+button:hover {
+    background-color: #FA9F42; /* Change background on hover */
+    color: #101214; /* Change text color on hover */
+}
+
+#recommended-home {
+    float: left;
+    margin-top: 15%;
+}
+
+#recommended-home h2 {
+    color: white;
+}
+
+.sign-in-wrapper {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 90vh; /* Full height of the viewport */
+}
+
+.sign-in-box {
+    background-color: #363636; /* Background color of the sign-in box */
+    padding: 30px 40px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+    text-align: center; /* Centers text inside the box */
+    color: #FFFFFF; /* Text color */
+    width: 300px; /* Set width for consistency */
+}
+
+.sign-in-box h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.sign-in-box label {
+    display: block;
+    text-align: left;
+    margin: 10px 0 5px;
+    font-size: 14px;
+}
+
+.sign-in-box input {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.sign-in-box input:focus {
+    border-color: #FA9F42; /* Highlight on focus */
+    outline: none;
+}
+
+.sign-in-box button,
+.link-button { /* Applying same styles to .link-button */
+    background-color: #101214;
+    color: white;
+    border: 2px solid #FA9F42;
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.sign-in-box button:hover,
+.link-button:hover { /* Matching hover effects */
+    background-color: #F1F1F1;
+    color: #101214;
+}
+
+.link-button { /* Overriding for link-style button */
+    background: none;
+    color: blue;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    text-decoration: underline;
+    display: inline; /* Ensures it doesn't take the full width */
+    padding: 10px 15px;
+    text-align: left;
+    margin-top: 5px;
+}
+
+.sign-in-box p {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.sign-in-box a,
+.link-button { /* Applying link color uniformly */
+    color: #fff; /* Link color */
+    
+}
+
+.dropdown-menu a,
+.link-button { /* Applying link color uniformly */
+    color: #000; /* Link color */
+    text-decoration: none;
+}
+
+.sign-in-box a:hover,
+.link-button:hover { /* Consistent hover effect */
+    text-decoration: underline;
+}
