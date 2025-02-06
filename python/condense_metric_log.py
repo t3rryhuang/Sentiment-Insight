@@ -13,7 +13,7 @@ Usage:
 """
 
 import os
-import mysql.connector
+import mysql.connectorco
 from mysql.connector import errorcode
 import argparse
 import logging

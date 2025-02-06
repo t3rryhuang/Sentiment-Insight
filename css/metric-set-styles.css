@@ -1,0 +1,315 @@
+/* ============================
+         Inline CSS
+         ============================ */
+         .chart-container {
+            float: right;
+            width: 60%;
+            margin: 20px;
+            margin-top: -30px;
+            margin-right: 10%;
+        }
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #B8BABD;
+            margin-bottom: 20px;
+        }
+        .entity-header {
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+        .entity-icon {
+            height: 36px;
+            width: 36px;
+            margin-right: 10px;
+        }
+        .save-button {
+            background: transparent;
+            border: 3px solid #B8BABD;
+            color: #B8BABD;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            margin-right: 5%;
+            margin-top: revert;
+        }
+        .save-button img {
+            height: 24px;
+            width: 24px;
+            margin-right: 5px;
+        }
+        .saved {
+            background: #B8BABD;
+            color: #0F1214;
+            border: 3px solid #B8BABD;
+        }
+        .saved img {
+            content: url('images/icons/saved.svg');
+        }
+        
+        .graph-controls {
+            float: left;
+            margin: 0;
+            background-color: #000;
+            color: #fff;
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 15px;
+        }
+        .graph-controls button,
+        .sankey-date-filter button {
+            margin-top: 0px;
+            border-radius: 30px;
+        }
+        .graph-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+        .graph-option {
+            text-align: center;
+            flex: 1;
+        }
+        .graph-option button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+        .graph-option img {
+            width: 25px;
+            height: 25px;
+            transform: translateY(2px);
+        }
+        .graph-option-label {
+            margin-top: 5px;
+            font-size: 14px;
+        }
+        .time-range-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .time-range-button {
+            background: transparent;
+            border: none;
+            color: #fff;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        .time-range-button.selected {
+            background: #D3D3D3;
+            color: #000;
+        }
+        .scroll-controls {
+            clear: both;
+            text-align: center;
+            margin: 20px;
+        }
+        .scroll-button {
+            background: #333;
+            border: none;
+            color: #fff;
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            display: inline-block;
+            border-radius: 4px;
+        }
+        .scroll-button:hover {
+            background: #555;
+        }
+        #sankey-diagram {
+            clear: both;
+            float: left;
+            width: 100%;
+            margin: 20px 0 20px 0;
+            color: #fff;
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 15px;
+        }
+        .sankey-date-filter {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            margin-right: 20px;
+            margin-bottom: 10px;
+        }
+        .sankey-date-filter label {
+            color: #fff;
+            margin-right: 5px;
+        }
+        .sankey-date-filter input[type="date"] {
+            background-color: #222;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 4px;
+            padding: 5px;
+        }
+        .sankey-date-filter button.filter-button {
+            background: #333;
+            border: none;
+            color: #fff;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .sankey-date-filter button.filter-button:hover {
+            background: #555;
+        }
+        .node-label-text-path {
+            fill: #fff !important;
+            text-shadow: none !important;
+        }
+        /* Section below sankey diagram in 1/3 + 2/3 columns */
+        .analysis-sections {
+            display: flex;
+            margin-top: 30px; /* spacing from the sankey diagram */
+            gap: 30px;        
+            width: 100%;
+        }
+        .analysis-section-33 {
+            width: 33%;
+        }
+        .analysis-section-67, .analysis-section-force-field {
+            width: 67%;
+        }
+        /* Simple modal styling */
+        .modal-overlay {
+            position: fixed;
+            top: 0; 
+            left: 0;
+            width: 100%; 
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none; /* hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .modal-content {
+            background: #222;
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 70%; /* Wider modal */
+            max-height: 80%;
+            box-sizing: border-box;
+            overflow-y: auto;
+            position: relative; /* for the close button */
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .close-modal {
+            background: #555;
+            color: #fff;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            margin-top: 0px;
+        }
+        .close-modal:hover {
+            background: #999;
+        }
+        .modal-body {
+            display: flex;
+            width: 100%;
+            gap: 20px;
+        }
+        .table-container {
+            width: 50%;
+        }
+        .severity-scale-container {
+            margin-top: 5%;
+            width: 50%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .gradient-bar {
+            width: 100%;
+            height: 30px;
+            background: linear-gradient(to right, #0B6E4F, #fa9f42, #721817);
+            margin-bottom: 10px;
+            border-radius: 4px;
+            position: relative;
+        }
+        .gradient-labels {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 0px;
+            color: #fff;
+            font-size: 14px;
+        }
+        .severity-colors {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 15px;
+        }
+        .severity-color {
+            width: 30%;
+            height: 25px;
+            border-radius: 4px;
+            text-align: center;
+            line-height: 25px;
+            color: #fff;
+            font-weight: bold;
+        }
+        /* Basic table styling */
+        table.metric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table.metric-table th, table.metric-table td {
+            border: 1px solid #444;
+            padding: 8px;
+            text-align: left;
+        }
+        table.metric-table th {
+            background: #333;
+        }
+        
+        #fullForceFieldDiagram {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column; /* Stack items vertically */
+  }
+  
+  .diagram-title {
+      width: auto;
+      padding: 20px;
+      margin-left: 20px;
+      font-size: 24px;
+      color: white;
+  }
+  
+  #svgContainer {
+      flex-grow: 1; /* Makes sure the SVG takes up the remaining space */
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+  }
+  
+  #svgContainer svg {
+      width: 100%;
+      height: 100%;
+  }

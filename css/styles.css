@@ -80,19 +80,83 @@ a.sidebar-button {
 }
 
 .top-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 50px;
-    background-color: #0F1113;
-    border-bottom: 1px solid #333; /* Thin outline on the bottom */
-    z-index: 1;
     display: flex;
-    justify-content: flex-end; /* Aligns content to the right */
-    align-items: center; /* Centers content vertically */
-    padding-right: 20px; /* Padding on the right for spacing */
+    align-items: center;
+    justify-content: flex-start; /* Aligns items to the left */
+    padding: 0 10px;
+    height: 50px; /* Fixed height */
+    background-color: #0F1113; /* Background color */
+    z-index: 1; /* Ensures it stays on top but below sidebar if sidebar overlaps */
+    width: calc(100% - 300px); /* Adjust width based on the sidebar width */
+    margin-left: 300px; /* Adjust this value based on your sidebar's width */
+    border-bottom: 1px solid #333;
 }
+
+.top-nav .user-icon-container {
+    margin-left: auto; /* Pushes the user icon and dropdown to the far right */
+    display: flex;
+    align-items: center;
+}
+
+.top-nav .dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 20px;
+    top: 50px;
+    background-color: #fff;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    z-index: 1000;
+    width: 150px;
+    border-radius: 4px;
+    padding: 5px 0;
+}
+
+/* Specific styling for the nav with search */
+.top-nav-with-search .search-box-container {
+    flex-grow: 1; /* Allows the search box to take available space */
+    padding-right: 20px; /* Provides padding between search and user icons */
+}
+
+.top-nav .search-box {
+    width: 500px;
+    margin-left: 30px;
+    height: 35px;
+}
+
+.top-nav .search-box input {
+    width: 100%;
+    padding: 6px 20px 8px 33px;
+    border: none;
+    background: none;
+    color: #CCCBCB;
+    font-size: 20px;
+}
+
+.top-nav .search-box img {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    }
+
+
+.user-icon-container {
+    display: flex;
+    align-items: center;
+}
+
+.user-icon-container img {
+    width: 24px; /* Adjust size as needed */
+    margin-right: 10px; /* Space between icons if needed */
+}
+
+/* Optionally adjust the last image if no space is required between it and the edge */
+.user-icon-container img:last-child {
+    margin-right: 30px;
+}
+
+
 
 .dropdown-menu {
     display: none;
@@ -119,30 +183,19 @@ a.sidebar-button {
     background-color: #f1f1f1;
 }
 
-.user-icon-container {
-    display: flex;
-    align-items: center;
-}
-
-.user-icon-container img {
-    width: 24px; /* Adjust size as needed */
-    margin-right: 10px; /* Space between icons if needed */
-}
-
-/* Optionally adjust the last image if no space is required between it and the edge */
-.user-icon-container img:last-child {
-    margin-right: 0;
-}
-
-.content {
+.content-index {
     margin-left: 310px; /* Offset content to the right of the sidebar */
     margin-top: 50px; /* Offset content below the navbar */
     padding: 20px;
+    text-align: center;
 }
 
 .content {
-    text-align: center; /* Center content horizontally */
+    margin-left: 330px; /* Offset content to the right of the sidebar */
+    margin-top: 50px; /* Offset content below the navbar */
     padding: 20px;
+    text-align: left;
+    color: white;
 }
 
 .search-container {
@@ -303,3 +356,40 @@ button:hover {
 .link-button:hover { /* Consistent hover effect */
     text-decoration: underline;
 }
+
+.suggestions-box {
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #2C4162;
+    border-radius: 15px;
+    text-align: left;
+    color: #CCCBCB;
+    font-size: 20px;
+}
+/* When suggestions box is empty, hide it */
+.suggestions-box:empty {
+    display: none;
+}
+.suggestion-item {
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.suggestion-item:hover {
+    background-color: #142237;
+}
+
+/* More specific selector for suggestion icons */
+.suggestion-item img.suggestion-icon {
+    position: static; /* Remove absolute positioning */
+    transform: none;  /* Remove transform */
+    width: 20px;      /* Set a size appropriate for suggestions */
+    height: 20px;
+    margin-right: 8px;
+}
+

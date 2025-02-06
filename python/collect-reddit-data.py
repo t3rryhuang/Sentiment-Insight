@@ -691,7 +691,7 @@ def main():
                 continue
 
             # Prepare metric log entry
-            today_str = datetime.datetime.now().strftime("%Y-%m-%d")
+            date_str = args.date.strip() if args.date.strip() else datetime.datetime.now().strftime("%Y-%m-%d")
             explanation = f"Topics & emotion from post+comments about {entity_name}"
             severity = -1
 
@@ -700,7 +700,7 @@ def main():
                 topic_id,
                 adj_id,
                 1,            # impressions
-                today_str,
+                date_str,
                 severity,
                 explanation
             ))
