@@ -21,15 +21,18 @@ function displaySidebar() {
                 <img src="images/icons/folder.svg" alt="Saved">
                 <span>Saved Metric Sets</span>
             </a>
+            
 
             <div class="sidebar-button">
                 <img src="images/icons/browse.svg" alt="Browse">
                 <span>Browse</span>
             </div>
-            <div class="sidebar-button">
-                <img src="images/icons/compare.svg" alt="Compare">
+
+            <a href="compare-metric-set.php" class="sidebar-button">    
+                <img src="images/icons/compare.svg" alt="Saved">
                 <span>Compare</span>
-            </div>
+            </a>
+
             <div id="sidebar-separator"></div>
         </div>
     </div>

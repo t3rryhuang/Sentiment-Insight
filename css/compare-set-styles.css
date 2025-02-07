@@ -1,0 +1,88 @@
+.content {
+    margin-left: 330px;
+    margin-top: -20px;
+    padding: 20px;
+    text-align: left;
+    color: white;
+}
+
+
+#compare-header {
+    background-color: #090B0C;
+    padding: 20px 50px;
+    box-sizing: border-box;
+    margin-left: 300px;
+    color: white;
+}
+
+#compare-header p {
+    margin-top: 0px;
+}
+
+#startDate {
+    margin-right: 15px;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.metrics-comparison {
+    display: flex;
+    justify-content: space-between;
+}
+
+.metric-select-container {
+    display: flex;
+    width: 100%;
+    background-color: #0E0F11; /* Set a solid background color here */
+}
+
+.metric-select-container select {
+    -webkit-appearance: none; /* Disables native styling on iOS */
+    -moz-appearance: none;    /* Disables native styling on Firefox */
+    appearance: none;         /* Disables native styling on modern browsers */
+    background-color: #142237;
+    color: #B8BCCA;
+    border: 1px solid #333; /* Optional: adds a solid border */
+    border-radius: 4px; /* Optional: rounds the corners */
+    font-size: 18px; /* Adjust font size as needed */
+    width: 50%; /* Adjust width to fit within the container */
+    box-shadow: none; /* Removes any default shadows */
+    margin-right: 40px; /* Adds space between the two select elements */
+}
+
+/* Custom arrow styling using a background image */
+.metric-select-container select {
+    background-image: url('../images/icons/selection-triangle.svg');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px 10px; /* Adjust size as needed */
+    padding: 15px;
+}
+
+.metric-select-container select:last-child {
+    margin-right: 0;
+}
+
+
+.date-picker {
+    display: flex;
+    align-items: center;
+}
+
+.date-picker label {
+    color: #B8BCCA;
+    margin-right: 10px;
+}
+
+.date-picker input[type="date"] {
+    background-color: #222;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 5px;
+    width: auto; /* Adjust width as necessary */
+}
