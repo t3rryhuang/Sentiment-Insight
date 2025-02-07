@@ -25,32 +25,7 @@
             width: 36px;
             margin-right: 10px;
         }
-        .save-button {
-            background: transparent;
-            border: 3px solid #B8BABD;
-            color: #B8BABD;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            margin-right: 5%;
-            margin-top: revert;
-        }
-        .save-button img {
-            height: 24px;
-            width: 24px;
-            margin-right: 5px;
-        }
-        .saved {
-            background: #B8BABD;
-            color: #0F1214;
-            border: 3px solid #B8BABD;
-        }
-        .saved img {
-            content: url('images/icons/saved.svg');
-        }
+        
         
         .graph-controls {
             float: left;

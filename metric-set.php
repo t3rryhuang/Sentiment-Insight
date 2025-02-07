@@ -287,8 +287,15 @@ displayTopNavWithSearch();
                 View Full Table &gt;
               </a>
             <?php endif; ?>
+
+
+            
         </div>
     </div>
+
+
+    <h3>Word Cloud</h3>
+    <div style="float: center; margin-left: 20px;" id="wordCloudContainer"></div>
 </div>
 
 <!-- MODAL: All Grouped Topics by Max Severity, Descending -->
@@ -408,6 +415,7 @@ window.topicFreqData      = <?php echo json_encode($topicFreqAll); ?>; // We'll 
 <script src="js/charts-and-graphs/sankey-diagram.js"></script>
 <script src="js/charts-and-graphs/force-field-diagram.js"></script>
 <script src="js/charts-and-graphs/topic-frequency.js"></script>
+<script src="js/charts-and-graphs/word-cloud.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function(){

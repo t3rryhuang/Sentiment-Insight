@@ -15,10 +15,13 @@ function displaySidebar() {
                 <img src="images/icons/home.svg" alt="Home">
                 <span>Home</span>
             </a>
-            <div class="sidebar-button">
+            
+           
+            <a href="saved-metric-sets.php" class="sidebar-button">    
                 <img src="images/icons/folder.svg" alt="Saved">
                 <span>Saved Metric Sets</span>
-            </div>
+            </a>
+
             <div class="sidebar-button">
                 <img src="images/icons/browse.svg" alt="Browse">
                 <span>Browse</span>

@@ -286,7 +286,7 @@
                 if(data.success){
                     if(data.saved){
                         saveButton.classList.add('saved');
-                        saveButton.innerHTML = '<img src="images/icons/saved.svg" alt="Saved Icon"> Saved';
+                        saveButton.innerHTML = '<img src="images/icons/save-grey.svg" alt="Saved Icon"> Saved';
                     } else {
                         saveButton.classList.remove('saved');
                         saveButton.innerHTML = '<img src="images/icons/save-grey.svg" alt="Save Icon"> Save';
