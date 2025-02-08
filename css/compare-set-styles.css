@@ -86,3 +86,54 @@
     padding: 5px;
     width: auto; /* Adjust width as necessary */
 }
+
+.metricsOutput {
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between; /* Space out the two halves */
+    width: 100%; /* Full width of the container */
+    margin-top: 50px;
+}
+
+.half {
+    width: 50%; /* Each half takes up 50% of the total width */
+    justify-content: center; /* Horizontally center the content */
+    margin-right: 40px;
+    text-align: center;
+}
+
+.content {
+    text-align: center; /* Center text inside the content div */
+}
+
+.net-severity-value {
+    font-size: 44px;
+}
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    border-collapse: collapse;
+    width: 90%; /* Adjust table width */
+    max-width: 600px; /* Prevents excessive width */
+    table-layout: fixed; /* Ensures columns respect defined widths */
+}
+
+table th, td {
+    border: 1px solid #444;
+    padding: 8px;
+    text-align: left;
+}
+
+table th {
+    background: #333;
+}
+
+/* Define fixed column widths: 80% for first column, 20% for second */
+th:first-child, td:first-child {
+    width: 75%;
+}
+
+th:last-child, td:last-child {
+    width: 25%;
+}

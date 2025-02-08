@@ -299,4 +299,24 @@ function getEntityInfo(mysqli $conn, int $setID): array {
     ];
 }
 
+function fetchSavedSets($conn, $username) {
+    $sql = "
+        SELECT SavedSet.setID, 
+               TrackedEntity.entityType,
+               TrackedEntity.name
+          FROM Account
+          JOIN SavedSet ON Account.accountID = SavedSet.accountID
+          JOIN TrackedEntity ON SavedSet.setID = TrackedEntity.setID
+         WHERE Account.username = ?
+    ";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $sets = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+    return $sets;
+}
+
+
 ?>

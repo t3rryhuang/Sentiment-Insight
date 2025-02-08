@@ -3,38 +3,20 @@
 
 session_start();
 
-// Redirect to sign-in page if not logged in
+// Redirect if not logged in
 if (!isset($_SESSION['username'])) {
     header('Location: sign-in-page.php');
     exit;
 }
 
-require 'functions.php'; // Include your functions file that contains connectDB()
+require 'functions.php'; // your site-wide functions
 
-// Function to fetch saved metric sets
-function fetchSavedSets($conn, $username) {
-    $sql = "SELECT SavedSet.setID, TrackedEntity.entityType, TrackedEntity.name
-            FROM Account
-            JOIN SavedSet ON Account.accountID = SavedSet.accountID
-            JOIN TrackedEntity ON SavedSet.setID = TrackedEntity.setID
-            WHERE Account.username = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $sets = $result->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
-    return $sets;
-}
-
-// Connect to DB and fetch sets
 $conn = connectDB();
 $savedSets = fetchSavedSets($conn, $_SESSION['username']);
 $conn->close();
 
-?>
-<?php
-displayHead("Search Results");
+// HTML output
+displayHead("Compare Metric Sets");
 displaySidebar();
 displayTopNavWithSearch();
 ?>
@@ -50,39 +32,132 @@ displayTopNavWithSearch();
             <input type="date" id="endDate" onchange="loadMetricData()">
         </div>
     </div>
-        <p>Compare your saved metric sets by selecting from the drop down list.</p>
+    <p>Compare your saved metric sets by selecting from the dropdown lists.</p>
+
     <div class="metrics-comparison">
         <div class="metric-select-container">
             <select id="metricSet1" onchange="loadMetricData()">
                 <option value="">Select Metric Set</option>
                 <?php foreach ($savedSets as $set): ?>
-                <option value="<?php echo htmlspecialchars($set['setID']); ?>">
-                    <?php echo htmlspecialchars($set['name']); ?>
-                </option>
+                    <option value="<?= htmlspecialchars($set['setID']) ?>">
+                        <?= htmlspecialchars($set['name']) ?>
+                    </option>
                 <?php endforeach; ?>
             </select>
+
             <select id="metricSet2" onchange="loadMetricData()">
                 <option value="">Select Metric Set</option>
                 <?php foreach ($savedSets as $set): ?>
-                <option value="<?php echo htmlspecialchars($set['setID']); ?>">
-                    <?php echo htmlspecialchars($set['name']); ?>
-                </option>
+                    <option value="<?= htmlspecialchars($set['setID']) ?>">
+                        <?= htmlspecialchars($set['name']) ?>
+                    </option>
                 <?php endforeach; ?>
             </select>
         </div>
     </div>
 </div>
 
-
 <div class="content">
-    
+    <!-- Net Severity Section -->
+    <div class="metricsOutput">
+        <div class="half">
+            <h3>Net Severity</h3>
+            <div id="netSeverity1" class="net-severity-value">--</div>
+        </div>
+        <div class="half">
+            <h3>Net Severity</h3>
+            <div id="netSeverity2" class="net-severity-value">--</div>
+        </div>
+    </div>
 
-        <div id="metricsOutput">
-            <!-- Dynamic content will be loaded here based on selected metric sets and dates -->
+    <!-- Most Positive Aspects -->
+    <!-- We'll show 3 lowest-severity topics for each set in a table -->
+    <div class="metricsOutput">
+        <div class="half">
+            <h3>Most Positive Aspects</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Topic</th>
+                        <th>Avg Severity</th>
+                    </tr>
+                </thead>
+                <tbody id="mostPositive1">
+                    <!-- Filled by JS -->
+                </tbody>
+            </table>
+        </div>
+        <div class="half">
+            <h3>Most Positive Aspects</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Topic</th>
+                        <th>Avg Severity</th>
+                    </tr>
+                </thead>
+                <tbody id="mostPositive2">
+                    <!-- Filled by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Most Negative Aspects -->
+    <!-- We'll show 3 highest-severity topics for each set in a table -->
+    <div class="metricsOutput">
+        <div class="half">
+            <h3>Most Negative Aspects</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Topic</th>
+                        <th>Avg Severity</th>
+                    </tr>
+                </thead>
+                <tbody id="mostNegative1">
+                    <!-- Filled by JS -->
+                </tbody>
+            </table>
+        </div>
+        <div class="half">
+            <h3>Most Negative Aspects</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Topic</th>
+                        <th>Avg Severity</th>
+                    </tr>
+                </thead>
+                <tbody id="mostNegative2">
+                    <!-- Filled by JS -->
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
-<script src="js/metric-comparison.js"></script>
+<!-- Link to the metric comparison JS file -->
+<script src="js/charts-and-graphs/metric-comparison.js"></script>
+
+<!-- 
+     Inline script to set default dates to last 7 days 
+     and immediately load data on page load 
+-->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let today = new Date();
+    let endDateValue = today.toISOString().split('T')[0];
+    document.getElementById('endDate').value = endDateValue;
+
+    let lastWeek = new Date(today.getTime() - (7 * 24 * 60 * 60 * 1000));
+    let startDateValue = lastWeek.toISOString().split('T')[0];
+    document.getElementById('startDate').value = startDateValue;
+
+    // Kick off the initial data load
+    loadMetricData();
+});
+</script>
+
 </body>
 </html>
