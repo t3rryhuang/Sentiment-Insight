@@ -251,12 +251,13 @@ button:hover {
 }
 
 #recommended-home {
-    float: left;
+    float: center;
     margin-top: 15%;
 }
 
 #recommended-home h2 {
     color: white;
+    text-align: left;
 }
 
 .sign-in-wrapper {

@@ -137,3 +137,11 @@ th:first-child, td:first-child {
 th:last-child, td:last-child {
     width: 25%;
 }
+
+.chart-container {
+    position: relative;
+    width: 60%;      /* or 800px, or whatever you prefer */
+    max-width: 900px; /* optional max width */
+    height: 250px;   /* fixed height */
+    margin: 0 auto;  /* center horizontally */
+}

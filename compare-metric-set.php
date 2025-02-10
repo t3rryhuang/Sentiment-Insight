@@ -2,8 +2,6 @@
 // compare-metric-set.php
 
 session_start();
-
-// Redirect if not logged in
 if (!isset($_SESSION['username'])) {
     header('Location: sign-in-page.php');
     exit;
@@ -15,12 +13,24 @@ $conn = connectDB();
 $savedSets = fetchSavedSets($conn, $_SESSION['username']);
 $conn->close();
 
-// HTML output
+// Output HTML
 displayHead("Compare Metric Sets");
 displaySidebar();
 displayTopNavWithSearch();
 ?>
 <link rel="stylesheet" href="css/compare-set-styles.css">
+
+<!-- 1) Load Luxon (for date/time) -->
+<script src="https://cdn.jsdelivr.net/npm/luxon@3"></script>
+
+<!-- 2) Load Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- 3) Load the Chart.js adapter for Luxon, AFTER Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1"></script>
+
+<!-- 4) Load your custom JS that references Chart + the adapter -->
+<script src="js/charts-and-graphs/metric-comparison.js"></script>
 
 <div id="compare-header">
     <div class="header-top">
@@ -71,7 +81,6 @@ displayTopNavWithSearch();
     </div>
 
     <!-- Most Positive Aspects -->
-    <!-- We'll show 3 lowest-severity topics for each set in a table -->
     <div class="metricsOutput">
         <div class="half">
             <h3>Most Positive Aspects</h3>
@@ -82,9 +91,7 @@ displayTopNavWithSearch();
                         <th>Avg Severity</th>
                     </tr>
                 </thead>
-                <tbody id="mostPositive1">
-                    <!-- Filled by JS -->
-                </tbody>
+                <tbody id="mostPositive1"><!-- Filled by JS --></tbody>
             </table>
         </div>
         <div class="half">
@@ -96,15 +103,12 @@ displayTopNavWithSearch();
                         <th>Avg Severity</th>
                     </tr>
                 </thead>
-                <tbody id="mostPositive2">
-                    <!-- Filled by JS -->
-                </tbody>
+                <tbody id="mostPositive2"><!-- Filled by JS --></tbody>
             </table>
         </div>
     </div>
 
     <!-- Most Negative Aspects -->
-    <!-- We'll show 3 highest-severity topics for each set in a table -->
     <div class="metricsOutput">
         <div class="half">
             <h3>Most Negative Aspects</h3>
@@ -115,9 +119,7 @@ displayTopNavWithSearch();
                         <th>Avg Severity</th>
                     </tr>
                 </thead>
-                <tbody id="mostNegative1">
-                    <!-- Filled by JS -->
-                </tbody>
+                <tbody id="mostNegative1"><!-- Filled by JS --></tbody>
             </table>
         </div>
         <div class="half">
@@ -129,21 +131,19 @@ displayTopNavWithSearch();
                         <th>Avg Severity</th>
                     </tr>
                 </thead>
-                <tbody id="mostNegative2">
-                    <!-- Filled by JS -->
-                </tbody>
+                <tbody id="mostNegative2"><!-- Filled by JS --></tbody>
             </table>
         </div>
     </div>
+
+    <!-- Time Series Chart Section -->
+    <div style="margin-top: 75px;">
+        <h3>Average Sentiment Over Time</h3>
+        <canvas id="timeSeriesChart" width="600" height="200"></canvas>
+    </div>
 </div>
 
-<!-- Link to the metric comparison JS file -->
-<script src="js/charts-and-graphs/metric-comparison.js"></script>
-
-<!-- 
-     Inline script to set default dates to last 7 days 
-     and immediately load data on page load 
--->
+<!-- Initialize default dates & auto-load data -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     let today = new Date();
@@ -154,7 +154,6 @@ document.addEventListener("DOMContentLoaded", function() {
     let startDateValue = lastWeek.toISOString().split('T')[0];
     document.getElementById('startDate').value = startDateValue;
 
-    // Kick off the initial data load
     loadMetricData();
 });
 </script>

@@ -1,7 +1,6 @@
 <?php
 // chart-functions/get-compare-data.php
 
-// Debugging in development (remove on production)
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -26,7 +25,6 @@ function getNetSeverity($conn, $setID, $start, $end) {
         return null;
     }
 
-    // Use backticks if your column is exactly named "date"
     $sql = "
         SELECT severity, impressions
           FROM MetricLogCondensed
@@ -61,8 +59,6 @@ function getMostPositive($conn, $setID, $start, $end, $limit = 3) {
         return [];
     }
 
-    // We'll compute average severity per topic = (Σ severity*impressions)/(Σ impressions)
-    // Then order ascending (lowest first) and LIMIT 3
     $sql = "
         SELECT c.condensedTopic AS topic,
                SUM(m.severity * m.impressions) / SUM(m.impressions) AS avgSeverity
@@ -135,6 +131,47 @@ function getMostNegative($conn, $setID, $start, $end, $limit = 3) {
     return $data;
 }
 
+/**
+ * 4) Get daily average severity (time series)
+ *    Returns array of [ { "date": "YYYY-MM-DD", "avgSeverity": float }, ... ]
+ *    ordered by date ascending
+ */
+function getTimeSeriesAverages($conn, $setID, $start, $end) {
+    if (empty($setID) || empty($start) || empty($end)) {
+        return [];
+    }
+
+    $sql = "
+        SELECT `date`,
+               SUM(severity * impressions) / SUM(impressions) AS avgSeverity
+          FROM MetricLogCondensed
+         WHERE setID = ?
+           AND `date` >= ?
+           AND `date` <= ?
+         GROUP BY `date`
+         ORDER BY `date` ASC
+    ";
+
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        echo json_encode(["error" => $conn->error]);
+        exit;
+    }
+    $stmt->bind_param("iss", $setID, $start, $end);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $data = [];
+    while ($row = $result->fetch_assoc()) {
+        $data[] = [
+            'date' => $row['date'],
+            'avgSeverity' => $row['avgSeverity'] !== null ? (float)$row['avgSeverity'] : null,
+        ];
+    }
+    $stmt->close();
+    return $data;
+}
+
 // Build final data
 $response = [
     'netSeverity1'   => getNetSeverity($conn, $set1, $startDate, $endDate),
@@ -143,6 +180,9 @@ $response = [
     'mostPositive2'  => getMostPositive($conn, $set2, $startDate, $endDate),
     'mostNegative1'  => getMostNegative($conn, $set1, $startDate, $endDate),
     'mostNegative2'  => getMostNegative($conn, $set2, $startDate, $endDate),
+    // Time series data
+    'timeSeries1'    => getTimeSeriesAverages($conn, $set1, $startDate, $endDate),
+    'timeSeries2'    => getTimeSeriesAverages($conn, $set2, $startDate, $endDate),
 ];
 
 $conn->close();
