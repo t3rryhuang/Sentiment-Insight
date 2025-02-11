@@ -198,7 +198,7 @@ $result = $conn->query($query);
 <script>
   function toggleSubmitButton() {
     const searchInput = document.getElementById('searchInput');
-    the searchButton = document.getElementById('searchButton');
+    const searchButton = document.getElementById('searchButton');
     searchButton.disabled = searchInput.value.trim() === '';
   }
 </script>
