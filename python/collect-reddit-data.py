@@ -7,6 +7,7 @@ import string
 import hashlib
 import json
 from rapidfuzz.fuzz import partial_ratio
+from rapidfuzz.fuzz import token_sort_ratio
 import torch
 import ollama  # For interacting with DeepSeek-R1:8B
 
@@ -380,26 +381,38 @@ def get_top_emotion(text):
 
 def is_organization_mentioned(text, organization_name):
     """
-    Checks if the organization name is mentioned in a meaningful way in the text.
+    Checks if the organization name is mentioned in a meaningful way in the cleaned text.
+    
+    This function employs:
+      1. A regex pattern that requires all tokens in the organization name to appear (in any order).
+      2. spaCy NER with fuzzy matching to compare recognized ORG/GPE entities against the organization name.
+      3. A fallback sentence-level fuzzy match ensuring context (at least one noun and one verb).
+    
+    Assumes that the text is already cleaned (lowercase, punctuation removed, etc.).
     """
-    # Case-insensitive search for the organization name
-    if organization_name.lower() not in text.lower():
-        return False
+    org_lower = organization_name.lower()
+    text_lower = text.lower()
+    
+    # 1. Regex-based whole-word matching for all tokens in any order
+    org_tokens = org_lower.split()
+    pattern = r'\b' + r'\b.*\b'.join(re.escape(token) for token in org_tokens) + r'\b'
+    if re.search(pattern, text_lower):
+        return True
 
-    # Use spaCy to check if the organization name is part of a meaningful context
-    doc = nlp(text)
+    # 2. Use spaCy's NER to detect entities and compare them with fuzzy matching.
+    doc = nlp(text)  # Assumes nlp (spaCy model) is already loaded.
     for ent in doc.ents:
-        if ent.text.lower() == organization_name.lower() and ent.label_ in ["ORG", "GPE"]:
-            return True
+        if ent.label_ in ["ORG", "GPE"]:
+            # Use token_sort_ratio for fuzzy comparison.
+            if token_sort_ratio(org_lower, ent.text.lower()) > 80:
+                return True
 
-    # Fallback: Check if the organization name is mentioned in a sentence
-    sentences = sent_tokenize(text)
-    for sentence in sentences:
-        if organization_name.lower() in sentence.lower():
-            # Check if the sentence contains meaningful context (e.g., verbs, nouns)
-            doc = nlp(sentence)
-            has_verb = any(token.pos_ == "VERB" for token in doc)
-            has_noun = any(token.pos_ == "NOUN" for token in doc)
+    # 3. Fallback: Sentence-level fuzzy matching with contextual check.
+    for sentence in sent_tokenize(text):
+        if token_sort_ratio(org_lower, sentence.lower()) > 80:
+            doc_sentence = nlp(sentence)
+            has_verb = any(token.pos_ == "VERB" for token in doc_sentence)
+            has_noun = any(token.pos_ == "NOUN" for token in doc_sentence)
             if has_verb and has_noun:
                 return True
 
@@ -407,7 +420,8 @@ def is_organization_mentioned(text, organization_name):
 
 def search_posts(entity_type, entity_name, date_str=None, limit=100):
     """
-    If entity_type == 'subreddit', search that sub. Otherwise search 'all'.
+    If entity_type == 'subreddit', search that sub. For 'Industry', search for "<entity_name> industry".
+    Otherwise (e.g., Organisation), search 'all' with the entity_name.
     We do a specified window by date_str. You can remove the date check to get older posts.
     """
     global request_count
@@ -424,9 +438,14 @@ def search_posts(entity_type, entity_name, date_str=None, limit=100):
         end_dt = now
         start_dt = now - datetime.timedelta(days=1)
 
+    # Build the appropriate search query based on entity_type
     if entity_type.lower() == 'subreddit':
         sub_obj = reddit.subreddit(entity_name.replace("r/", ""))
         posts_source = sub_obj.search("*", sort='new', limit=limit)
+    elif entity_type.lower() == 'industry':
+        # Append ' industry' to narrow the query
+        query = f"{entity_name} industry"
+        posts_source = reddit.subreddit('all').search(query, sort='new', limit=limit)
     else:
         posts_source = reddit.subreddit('all').search(entity_name, sort='new', limit=limit)
 
@@ -445,9 +464,8 @@ def search_posts(entity_type, entity_name, date_str=None, limit=100):
         if filter_spam(text_content):
             continue
 
-        # For non-subreddit entity types, perform the organization check.
-        if entity_type.lower() != 'subreddit':
-            # Strict check: Ensure the organization is mentioned in a meaningful way
+        # For non-subreddit entity types (excluding organisations) perform the organization check.
+        if entity_type.lower() not in ['subreddit', 'organisation']:
             if not is_organization_mentioned(text_content, entity_name):
                 print(f"Skipping post: '{submission.title}' (no meaningful mention of {entity_name})")
                 continue
@@ -471,9 +489,21 @@ def extract_topics_deepseek(text, existing_topics):
     """
     # Prepare the prompt for DeepSeek
     prompt = f"""
-Extract the main topics from the following text.
-Keep each topic brief.
-Return only the topics, separated by commas.
+Based on the entire text below, please identify all thematically relevant "abstractive" topics that best capture its core themes. Focus on deeper, context-based aspects rather than trivial or generic words (e.g., "great", "nice"). Avoid speculation beyond what the text provides. Return only the topics, separated by commas.
+
+Example 1:
+Text: "I missed the application deadline for University of Edinburgh College of Art, and I am heartbroken. My grades are excellent, but now I must wait until clearing or consider deferring my studies. The course and facilities are perfect for me."
+Expected Topics: University Application, Deadline Pressure, Emotional Distress, Deferral Consideration
+
+Example 2:
+Text: "The discussion highlights how social media platforms create echo chambers by curating content that only reinforces users' existing views. This phenomenon, known as filter bubbles, intensifies polarization."
+Expected Topics: Echo Chambers, Filter Bubbles, Polarization
+
+Example 3:
+Text: "The company announced a major restructuring aimed at cutting costs and increasing efficiency. While some see it as a necessary move, many employees are worried about job security and the future corporate culture."
+Expected Topics: Corporate Restructuring, Cost-Cutting, Job Security, Corporate Culture
+
+Now, based on the text below, return only the topics as a comma-separated list:
 
 Text: {text}
 """
@@ -625,8 +655,8 @@ def main():
     if entity_type.lower() == 'industry':
         valid_industries = ["Agriculture", "Food", "Forestry", "Mining", "Oil and Gas", "Metal Production", "Chemical", 
                             "Mechanical and Electrical Engineering", "Transport Equipment Manufacturing", "Clothing", "Commerce", 
-                            "Finance", "Tourism", "Media", "Telecommunications", "Postal", "Construction", "Education", "Health Service", 
-                            "Public Service", "Utilities", "Waterway", "Transport"]
+                            "Finance", "Tourism", "Media", "Telecommunications", "Postal", "Construction", "Education", "Healthcare", 
+                            "Public Service", "Utilities", "Waterway", "Transport", "Care"]
         if entity_name not in valid_industries:
             print(f"ERROR: '{entity_name}' not recognized. Valid: {valid_industries}")
             return

@@ -163,7 +163,9 @@ function getSankeyPlotData($conn, $setID, $startDate, $endDate) {
         'neutral'  => '#fa9f42',
         'surprise' => '#fa9f42',
         'sadness'  => '#721817',
-        'fear'     => '#721817'
+        'fear'     => '#721817',
+        'disgust'  => '#721817',
+        'anger'    => '#721817'
     ];
 
     // Helper for hex => rgba
