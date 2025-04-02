@@ -104,7 +104,28 @@ Before running the Python scripts to fetch sentiment data, you must integrate De
      from ollama import Ollama
      model = Ollama('deepseek-r1:8b')
       ```
-     
+
+## Training the Severity Classifier
+
+This section details the process of training the severity classifier used in the Sentiment Insight project. The classifier enhances performance by handling class imbalance and leveraging a compact model architecture for better convergence. It utilises evaluation metrics such as balanced accuracy and macro F1 score to gauge the effectiveness of the model.
+
+The training script `train_severity_classifier.py` is designed to:
+- Handle class imbalance through dynamic upsampling.
+- Use the `distilroberta-base` model for efficient training and convergence.
+- Implement enhanced evaluation metrics such as balanced accuracy and F1 score.
+
+```bash
+python train_severity_classifier.py \
+  --data_path "./data/severity_training_data.csv" \
+  --output_dir "./trained_models/severity_classifier" \
+  --epochs 5 \
+  --batch_size 8 \
+  --lr 2e-5 \
+  --max_len 128
+```
+
+Training data has been provided for you. The classifier must be trained and created prior to running the Python scripts to fetch and extract topics.
+
 ### Python Script Usage Example
 You can call `collect-reddit-data.py` for each date of interest, specifying the entity type and name:
 ```bash
@@ -118,17 +139,4 @@ Then, for each date you collected, run:
 ```bash
 python condense_metric_log.py --setID {SET ID INTEGER OF TRACKED ENTITY. Check the TrackedEntity table for it.} --date YYYY-MM-DD
 ```
-
-## Training the Severity Classifier
-
-This section details the process of training the severity classifier used in the Sentiment Insight project. The classifier enhances performance by handling class imbalance and leveraging a compact model architecture for better convergence. It utilizes evaluation metrics such as balanced accuracy and macro F1 score to gauge the effectiveness of the model.
-
-### Training the Severity Classifier
-The training script `train_severity_classifier.py` is designed to:
-- Handle class imbalance through dynamic upsampling.
-- Use the `distilroberta-base` model for efficient training and convergence.
-- Implement enhanced evaluation metrics such as balanced accuracy and F1 score.
-
-Training data has been provided for you.
-
 
