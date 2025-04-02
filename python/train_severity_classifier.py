@@ -80,8 +80,8 @@ def main():
     # Compute class weights
     class_weights = compute_class_weights(df['severity'])
 
-    # Load tokenizer
-    logger.info(f"Loading tokenizer: {args.model_name}")
+    # Load tokeniser
+    logger.info(f"Loading tokeniser: {args.model_name}")
     tokenizer = AutoTokenizer.from_pretrained(args.model_name)
 
     def tokenize(batch):

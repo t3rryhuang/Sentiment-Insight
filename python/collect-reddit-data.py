@@ -70,7 +70,7 @@ if missing_vars:
 # Load spaCy model
 nlp = spacy.load("en_core_web_sm")
 
-# Initialize RAKE with NLTK's default stopwords
+# Initialise RAKE with NLTK's default stopwords
 rake_extractor = Rake()
 
 # Load emotion analysis model
@@ -84,13 +84,13 @@ emotion_pipeline = pipeline(
     top_k=None  # Get all classification scores
 )
 
-# Initialize T5 tokenizer and model for paraphrasing (if needed)
+# Initialise T5 tokeniser and model for paraphrasing (if needed)
 paraphrase_model_name = "t5-small"  # Change to "t5-base" or "t5-large" if needed
 paraphrase_tokenizer = T5Tokenizer.from_pretrained(paraphrase_model_name)
 paraphrase_model = T5ForConditionalGeneration.from_pretrained(paraphrase_model_name)
 paraphrase_model.eval()  # Set to evaluation mode
 
-# Initialize Ollama for DeepSeek-R1:8B
+# Initialise Ollama for DeepSeek-R1:8B
 OLLAMA_MODEL = "deepseek-r1:8b"
 
 # Predefined categories for topics
@@ -100,13 +100,13 @@ TOPIC_CATEGORIES = [
     "Financial Performance", "Corporate Governance"
 ]
 
-# Initialize Zero-Shot Classification pipeline
+# Initialise Few-Shot Classification pipeline
 zero_shot_classifier = pipeline(
     "zero-shot-classification", 
     model="facebook/bart-large-mnli"
 )
 
-# Initialize a cache dictionary (optional if used)
+# Initialise a cache dictionary
 topic_name_cache = {}
 
 def load_topic_name_cache(filepath='topic_name_cache.json'):
@@ -381,11 +381,11 @@ def get_top_emotion(text):
 
 def is_organization_mentioned(text, organization_name):
     """
-    Checks if the organization name is mentioned in a meaningful way in the cleaned text.
+    Checks if the organisation name is mentioned in a meaningful way in the cleaned text.
     
     This function employs:
-      1. A regex pattern that requires all tokens in the organization name to appear (in any order).
-      2. spaCy NER with fuzzy matching to compare recognized ORG/GPE entities against the organization name.
+      1. A regex pattern that requires all tokens in the organisation name to appear (in any order).
+      2. spaCy NER with fuzzy matching to compare recognised ORG/GPE entities against the organisation name.
       3. A fallback sentence-level fuzzy match ensuring context (at least one noun and one verb).
     
     Assumes that the text is already cleaned (lowercase, punctuation removed, etc.).
@@ -464,7 +464,7 @@ def search_posts(entity_type, entity_name, date_str=None, limit=100):
         if filter_spam(text_content):
             continue
 
-        # For non-subreddit entity types (excluding organisations) perform the organization check.
+        # For non-subreddit entity types (excluding organisations) perform the organisation check.
         if entity_type.lower() not in ['subreddit', 'organisation']:
             if not is_organization_mentioned(text_content, entity_name):
                 print(f"Skipping post: '{submission.title}' (no meaningful mention of {entity_name})")
@@ -496,8 +496,8 @@ Text: "I missed the application deadline for University of Edinburgh College of 
 Expected Topics: University Application, Deadline Pressure, Emotional Distress, Deferral Consideration
 
 Example 2:
-Text: "The discussion highlights how social media platforms create echo chambers by curating content that only reinforces users' existing views. This phenomenon, known as filter bubbles, intensifies polarization."
-Expected Topics: Echo Chambers, Filter Bubbles, Polarization
+Text: "The discussion highlights how social media platforms create echo chambers by curating content that only reinforces users' existing views. This phenomenon, known as filter bubbles, intensifies polarisation."
+Expected Topics: Echo Chambers, Filter Bubbles, Polarisation
 
 Example 3:
 Text: "The company announced a major restructuring aimed at cutting costs and increasing efficiency. While some see it as a necessary move, many employees are worried about job security and the future corporate culture."
@@ -643,10 +643,12 @@ def parse_args():
 def main():
     # Parse command-line arguments
     args = parse_args()
+    print(f"[{datetime.datetime.now()}] Arguments parsed.")
 
     # Load the topic name cache (optional if used)
     load_topic_name_cache()
-    
+    print(f"[{datetime.datetime.now()}] Topic name cache loaded.")
+
     entity_type = args.entity_type
     entity_name = args.entity_name
     date_str = args.date.strip()
@@ -656,17 +658,21 @@ def main():
         valid_industries = ["Agriculture", "Food", "Forestry", "Mining", "Oil and Gas", "Metal Production", "Chemical", 
                             "Mechanical and Electrical Engineering", "Transport Equipment Manufacturing", "Clothing", "Commerce", 
                             "Finance", "Tourism", "Media", "Telecommunications", "Postal", "Construction", "Education", "Healthcare", 
-                            "Public Service", "Utilities", "Waterway", "Transport", "Care"]
+                            "Public Service", "Utilities", "Waterway", "Transport", "Social Care", "Construction"]
         if entity_name not in valid_industries:
             print(f"ERROR: '{entity_name}' not recognized. Valid: {valid_industries}")
             return
+    print(f"[{datetime.datetime.now()}] Industry validation completed.")
 
     submissions = search_posts(entity_type, entity_name, date_str=date_str, limit=args.limit)  # Using the passed limit
+    print(f"[{datetime.datetime.now()}] Search completed; found {len(submissions)} submissions.")
+
     if not submissions:
         print("No posts found. Possibly increase limit or remove date filter.")
         return
 
     set_id = get_or_create_tracked_entity(entity_type, entity_name)
+    print(f"[{datetime.datetime.now()}] Tracked entity obtained with set_id: {set_id}.")
 
     # Gather all full_texts
     full_texts = []
@@ -683,6 +689,7 @@ def main():
             })
         else:
             print(f"Skipping post #{idx} due to empty content: '{submission.title}'")
+    print(f"[{datetime.datetime.now()}] Full texts gathered: {len(full_texts)} valid texts.")
 
     if not full_texts:
         print("No valid texts to process after filtering.")
@@ -690,9 +697,11 @@ def main():
 
     # Load existing topics from the database
     existing_topics = load_existing_topics()
+    print(f"[{datetime.datetime.now()}] Existing topics loaded.")
 
     # Perform topic extraction using DeepSeek
     print("Performing topic extraction on the collected posts...")
+    print(f"[{datetime.datetime.now()}] Topic extraction started.")
     metric_logs = []
 
     for idx, text in enumerate(full_texts):
@@ -742,14 +751,18 @@ def main():
             print(f"Extracted Topic: {topic}")
             print(f"Category: {category}")
             print(f"Overall Emotion: {emotion_label}")
+    print(f"[{datetime.datetime.now()}] Topic extraction completed; total metric logs: {len(metric_logs)}.")
 
     # Batch insert all metric logs
     batch_insert_metric_logs(metric_logs)
+    print(f"[{datetime.datetime.now()}] Metric logs batch inserted.")
 
     # Save the updated topic name cache (optional if used)
     save_topic_name_cache()
+    print(f"[{datetime.datetime.now()}] Topic name cache saved.")
 
     print("\nDONE. Check MetricLog for aggregated topic/emotion rows.")
+
 
 
 # ---------------------------------------------------

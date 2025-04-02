@@ -2,7 +2,7 @@
 """
 condense_metric_log.py
 
-This script condenses/summarizes topics from the MetricLog table for a given setID and date.
+This script condenses/summarises topics from the MetricLog table for a given setID and date.
 It assigns each topic to an existing CondensedTopic or creates a new one based on similarity.
 When creating a new CondensedTopic, it assigns the category based on the majority category
 of the merged topics. In case of a tie, it uses an NLP-based approach to determine the most applicable category.
@@ -137,7 +137,7 @@ def fetch_metric_logs(conn, set_id, date_str):
     rows = cursor.fetchall()
     cursor.close()
     for row in rows:
-        # Normalize the topic by applying title() method
+        # Normalise the topic by applying title() method
         row['topic'] = row['topic'].title()
     logger.info(f"Fetched {len(rows)} MetricLog entries for setID {set_id} on {date_str}.")
     return rows
@@ -298,7 +298,7 @@ def resolve_tie_with_nlp(conn, condensed_id, explanations, tied_categories):
         return tied_categories[0]
     condensed_topic_text = result[0]
 
-    # Initialize the NLP model
+    # Initialise the NLP model
     try:
         model = SentenceTransformer('all-mpnet-base-v2')  # Ensure this model is loaded only once if possible
     except Exception as e:
