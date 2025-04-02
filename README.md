@@ -74,9 +74,9 @@ DB_NAME=your_database_name
 Here’s a single command that installs the necessary Python libraries used at the top of the Python scripts:
 
 ```bash
-pip install torch numpy transformers fastapi uvicorn pydantic mysql-connector-python sentence-transformers scikit-learn python-dotenv pandas datasets
+pip install torch numpy transformers fastapi uvicorn pydantic mysql-connector-python sentence-transformers scikit-learn python-dotenv pandas datasets argparse logging ollama
 ```
-## 6. Running the Website Locally
+## Running the Website Locally
 1. **Install XAMPP** (or similar) and start Apache and MySQL.
 2. **Place Files**:
    - Copy the entire project folder into the `htdocs` directory (or subfolder) of your XAMPP installation.
@@ -88,9 +88,23 @@ pip install torch numpy transformers fastapi uvicorn pydantic mysql-connector-py
    - Register a new user account or log in (registration-page.php, sign-in-page.php).
    - You can now search and view aggregated sentiment data.
 
-## 7. Notes on TrackedEntity Records
+## Notes on TrackedEntity Records
 When you type in a search term (like a subreddit name, an organisation, or an industry) that doesn’t exist in the database, a **TrackedEntity** record will be automatically created by the pipeline or by the website’s scripts. This ensures that any new search is logged and can then be updated with fresh data from subsequent pipeline runs.
 
+## Installing and Using DeepSeek-R1:8B Locally
+
+DeepSeek-R1:8B is used to extract topics from Reddit posts. This section provides instructions on setting up and using DeepSeek-R1:8B locally through the Ollama library. A smaller model may be used in substitution of this.
+
+### Setting Up DeepSeek-R1:8B
+Before running the Python scripts to fetch sentiment data, you must integrate DeepSeek-R1:8B into your local environment as follows:
+
+**Initialise the Model**:
+   - Import Ollama in your Python script and initialise DeepSeek-R1:8B with the following commands:
+     ```python
+     from ollama import Ollama
+     model = Ollama('deepseek-r1:8b')
+      ```
+     
 ### Python Script Usage Example
 You can call `collect-reddit-data.py` for each date of interest, specifying the entity type and name:
 ```bash
@@ -104,5 +118,17 @@ Then, for each date you collected, run:
 ```bash
 python condense_metric_log.py --setID {SET ID INTEGER OF TRACKED ENTITY. Check the TrackedEntity table for it.} --date YYYY-MM-DD
 ```
+
+## Training the Severity Classifier
+
+This section details the process of training the severity classifier used in the Sentiment Insight project. The classifier enhances performance by handling class imbalance and leveraging a compact model architecture for better convergence. It utilizes evaluation metrics such as balanced accuracy and macro F1 score to gauge the effectiveness of the model.
+
+### Training the Severity Classifier
+The training script `train_severity_classifier.py` is designed to:
+- Handle class imbalance through dynamic upsampling.
+- Use the `distilroberta-base` model for efficient training and convergence.
+- Implement enhanced evaluation metrics such as balanced accuracy and F1 score.
+
+Training data has been provided for you.
 
 
